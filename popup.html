@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <h1>OneNote Clipper</h1>
+
+  <div id="view-setup" class="hidden">
+    <p class="muted">No client ID configured yet. Direct OneNote access requires your own
+    (free) Azure app registration – the setup guide is in the settings.</p>
+    <button id="btn-open-options" type="button">Open settings</button>
+  </div>
+
+  <div id="view-signin" class="hidden">
+    <p class="muted">Not signed in. Sign-in happens directly with Microsoft – no third-party server is involved.</p>
+    <button id="btn-signin" type="button">Sign in with Microsoft</button>
+    <p class="muted small">Window closes instantly or sign-in fails?
+    → <a href="#" id="link-manual-auth">Alternative tab-based sign-in</a></p>
+  </div>
+
+  <div id="view-clip" class="hidden">
+    <p id="account" class="muted small"></p>
+
+    <div id="message-info" class="small"></div>
+
+    <label for="section-search">Section</label>
+    <input type="search" id="section-search" placeholder="Search section or notebook …" autocomplete="off" />
+    <select id="section"></select>
+    <div id="section-count" class="muted small"></div>
+
+    <label class="row">
+      <input type="checkbox" id="include-attachments" checked />
+      Include attachments (up to ~20&nbsp;MB)
+    </label>
+
+    <button id="btn-clip" type="button">Save to OneNote</button>
+
+    <div class="row small">
+      <a href="#" id="link-refresh">Refresh sections</a>
+      <a href="#" id="link-signout">Sign out</a>
+      <a href="#" id="link-options">Settings</a>
+    </div>
+  </div>
+
+  <div id="status" class="hidden"></div>
+  <div id="result" class="hidden"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

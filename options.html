@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>OneNote Clipper – Settings</title>
+<style>
+  body {
+    font-family: system-ui, "Segoe UI", sans-serif;
+    font-size: 14px;
+    max-width: 760px;
+    margin: 24px auto;
+    padding: 0 16px 40px;
+    color: #1b1b1b;
+    line-height: 1.5;
+  }
+  h1 { font-size: 20px; color: #7719aa; }
+  h2 { font-size: 16px; margin-top: 28px; }
+  h3 { font-size: 14px; margin: 14px 0 6px; }
+  label { display: block; font-weight: 600; margin: 14px 0 4px; }
+  input[type="text"], select {
+    width: 100%; padding: 6px; box-sizing: border-box;
+    font-family: inherit; font-size: 14px;
+  }
+  button {
+    margin-top: 16px; padding: 8px 16px; border: 0; border-radius: 4px;
+    background: #7719aa; color: #fff; font-weight: 600; cursor: pointer;
+  }
+  button.secondary { background: #666; }
+  .mono {
+    font-family: ui-monospace, Consolas, monospace;
+    background: #f3f0f7; padding: 8px; border-radius: 4px;
+    word-break: break-all; user-select: all;
+  }
+  .hint { color: #555; font-size: 13px; }
+  #saved { color: #1e6b1e; font-weight: 600; margin-left: 10px; }
+  ol { padding-left: 20px; }
+  li { margin-bottom: 8px; }
+  details {
+    border: 1px solid #ddd; border-radius: 6px;
+    padding: 10px 14px; margin-top: 10px;
+  }
+  summary { font-weight: 600; cursor: pointer; color: #7719aa; }
+  table { border-collapse: collapse; margin-top: 8px; width: 100%; }
+  td, th { border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; font-size: 13px; }
+  th { background: #f3f0f7; }
+  code { background: #f3f0f7; padding: 1px 4px; border-radius: 3px; }
+</style>
+</head>
+<body>
+  <h1>OneNote Clipper – Settings</h1>
+
+  <p>This add-on talks <b>directly to Microsoft only</b>
+  (<code>login.microsoftonline.com</code> and <code>graph.microsoft.com</code>).
+  <b>No third-party server</b> is involved. It requires your own free app
+  registration in Microsoft Entra ID.</p>
+
+  <h2>Setup (one time, ~5 minutes)</h2>
+  <ol>
+    <li><b>Personal account (@outlook.com etc.)?</b> You first need your own Entra
+      directory: create a <a href="https://azure.microsoft.com/free" target="_blank" rel="noopener">free Azure account</a>
+      (card is only for identity verification, no charges – the add-on uses no paid
+      Azure resources). Work/school accounts can skip this and use their existing directory.</li>
+    <li>Open <a href="https://entra.microsoft.com" target="_blank" rel="noopener">entra.microsoft.com</a>
+      → <b>Entra ID</b> → <b>App registrations</b> → <b>New registration</b>.<br />
+      Name: e.g. <i>OneNote Clipper</i>. Account types:
+      <b>Accounts in any organizational directory and personal Microsoft accounts</b>
+      (or "personal accounts only" for private use).</li>
+    <li>Redirect URI: choose platform <b>"Mobile and desktop applications"</b>
+      (<b>NOT "Web"!</b>) and enter exactly this URL as a custom redirect URI:</li>
+  </ol>
+  <p class="mono" id="redirect-url">loading …</p>
+  <ol start="4">
+    <li><b>API permissions</b> → <b>Add a permission</b> → <b>Microsoft Graph</b> →
+      <b>Delegated</b> → add <code>Notes.ReadWrite</code> (you consent yourself at first sign-in).</li>
+    <li>Copy the <b>Application (client) ID</b> from the app's overview page into the field below and save.</li>
+    <li>Open an email → OneNote Clipper button → <b>Sign in with Microsoft</b>.</li>
+  </ol>
+  <p class="hint">Why "Mobile and desktop applications"? A redirect URI of type "Web"
+  makes the app a <i>confidential</i> client that requires a client secret – a local
+  add-on cannot have one (error <code>AADSTS70002</code>/<code>AADSTS7000218</code>).
+  As a public client, no secret is needed.</p>
+
+  <h2>Connection</h2>
+  <label for="client-id">Application (client) ID</label>
+  <input type="text" id="client-id" placeholder="e.g. 11111111-2222-3333-4444-555555555555" spellcheck="false" />
+
+  <label for="tenant">Directory (tenant)</label>
+  <select id="tenant">
+    <option value="common">common – work/school and personal accounts (default)</option>
+    <option value="consumers">consumers – personal Microsoft accounts only</option>
+    <option value="organizations">organizations – work/school accounts only</option>
+  </select>
+
+  <button id="save" type="button">Save</button>
+  <span id="saved"></span>
+
+  <h2>Your data</h2>
+  <p class="hint">Sign-in tokens and the section list are stored only locally in your
+  Thunderbird/Betterbird profile (<code>storage.local</code>). "Sign out" deletes them.</p>
+  <button id="signout" type="button" class="secondary">Sign out &amp; delete stored tokens</button>
+
+  <h2>Documentation</h2>
+
+  <details>
+    <summary>What is this? What can it do?</summary>
+    <p>OneNote Clipper saves the currently opened or selected email(s) as OneNote pages
+    with one click – similar to Outlook's "Send to OneNote", but for Thunderbird and
+    Betterbird. Unlike solutions that route your data through a third-party server,
+    this add-on talks directly to Microsoft. Your own app registration means you can
+    revoke access at any time.</p>
+    <ul>
+      <li>Page includes From/To/Date/Subject, formatted body (HTML or plain text),
+        inline images and optionally attachments</li>
+      <li>Target section selectable, grouped by notebook, with live search filter</li>
+      <li>Last used section is remembered; multi-select saves several emails in one go</li>
+      <li>Success message links directly to the created OneNote page</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>How does it work technically?</summary>
+    <h3>Authentication</h3>
+    <p>OAuth 2.0 authorization code flow with <b>PKCE</b> as a <b>public client</b>
+    (no client secret), via <code>browser.identity.launchWebAuthFlow</code>.
+    Scopes: <code>Notes.ReadWrite</code>, <code>User.Read</code>, <code>offline_access</code>
+    (refresh token for silent renewal). Tokens live only in <code>storage.local</code>.
+    Two workarounds are built in: <code>prompt=select_account</code> so the window
+    does not vanish instantly with an existing Microsoft session, and removal of the
+    <code>Origin</code> header <i>only</i> for <code>login.microsoftonline.com</code>
+    (otherwise error <code>AADSTS90023</code>, because Microsoft rejects cross-origin
+    token redemption for native clients). A tab-based fallback sign-in
+    (paste-the-redirect-URL) is available from the popup.</p>
+    <h3>Reading the email</h3>
+    <p>The raw message (<code>messages.getRaw</code>) is parsed by the add-on's own
+    MIME parser (<code>mime.js</code>): nested multiparts, base64, quoted-printable,
+    7bit/8bit, charsets (UTF-8, ISO-8859-1, Windows-1252, …), RFC 2231 filenames,
+    inline images (<code>cid:</code>) and attachments. <code>messages.getFull()</code>
+    is deliberately not used because it does not reliably return bodies across versions.</p>
+    <h3>Creating the OneNote page</h3>
+    <p>The HTML body is sanitized (scripts, forms, event handlers etc. removed) and
+    serialized as well-formed XHTML. A header table is added, <code>cid:</code>
+    references are rewritten to binary parts, and everything is posted as a manually
+    built <code>multipart/form-data</code> request to
+    <code>POST /v1.0/me/onenote/sections/{id}/pages</code> (Microsoft Graph).
+    Sections are listed via <code>GET /me/onenote/sections?$expand=parentNotebook</code>
+    and cached locally.</p>
+    <h3>Tests</h3>
+    <p>The parser and the full clip pipeline (raw email → sanitized page → multipart
+    request) are covered by unit and integration tests run against realistic
+    sample messages, including umlauts, nested multiparts, inline images and attachments.</p>
+  </details>
+
+  <details>
+    <summary>Why these permissions?</summary>
+    <table>
+      <tr><th>Permission</th><th>Purpose</th></tr>
+      <tr><td><code>messagesRead</code></td><td>Read the email (headers, raw source) to clip it</td></tr>
+      <tr><td><code>identity</code></td><td>Microsoft sign-in window and redirect URL</td></tr>
+      <tr><td><code>storage</code></td><td>Store tokens, client ID and section cache locally</td></tr>
+      <tr><td><code>tabs</code></td><td>Find the displayed message; open the fallback sign-in tab</td></tr>
+      <tr><td><code>webRequest</code> / <code>webRequestBlocking</code> / <code>declarativeNetRequestWithHostAccess</code></td>
+        <td>Remove the <code>Origin</code> header <b>only</b> for requests to
+        <code>login.microsoftonline.com</code> (AADSTS90023 workaround). No other
+        traffic is read or modified.</td></tr>
+      <tr><td>Host: <code>login.microsoftonline.com</code>, <code>graph.microsoft.com</code></td>
+        <td>The only two hosts the add-on ever contacts</td></tr>
+    </table>
+  </details>
+
+  <details>
+    <summary>Troubleshooting</summary>
+    <table>
+      <tr><th>Error</th><th>Fix</th></tr>
+      <tr><td>"Account not found in tenant 'Microsoft Services'"</td>
+        <td>Personal account without a directory: create a free Azure account first (step 1 above).</td></tr>
+      <tr><td><code>AADSTS70002</code> / <code>AADSTS7000218</code> (client_secret required)</td>
+        <td>Redirect URI registered as "Web". Delete it and re-add it under
+        "Mobile and desktop applications".</td></tr>
+      <tr><td><code>AADSTS90023</code> (cross-origin token redemption)</td>
+        <td>Update the add-on (Origin workaround is built in since v1.2). Alternatively,
+        register the redirect URI as "Single-page application".</td></tr>
+      <tr><td><code>AADSTS50011</code> (redirect_uri mismatch)</td>
+        <td>The registered URI differs from the one shown above – copy it exactly,
+        including <code>https://</code> and the trailing <code>/</code>.</td></tr>
+      <tr><td>Sign-in window closes instantly</td>
+        <td>Usually not an error: with an existing Microsoft session the window
+        redirects immediately. Check the popup for the result. If it persists, use
+        "Alternative tab-based sign-in" in the popup.</td></tr>
+      <tr><td>No message found</td>
+        <td>Click/open the email again, then reopen the popup. Works with message tabs,
+        standalone message windows and selections in the mail list.</td></tr>
+      <tr><td>Section list empty or outdated</td>
+        <td>Click "Refresh sections" in the popup. On permission errors, verify
+        <code>Notes.ReadWrite</code> (delegated) in the app registration.</td></tr>
+    </table>
+  </details>
+
+  <details>
+    <summary>Limits, privacy &amp; warranty</summary>
+    <ul>
+      <li>~20 MB total per page for inline images + attachments (larger items are
+        skipped and listed in the result message).</li>
+      <li>Page title = email subject (max. 200 characters).</li>
+      <li>Encrypted emails (S/MIME/OpenPGP) may not always have a readable body.</li>
+      <li>No telemetry, no tracking, no update backend, no third-party servers.
+        Signing out deletes all local tokens; deleting the app registration in Entra
+        revokes all access immediately.</li>
+      <li><b>Provided as is, without any warranty.</b> Built with AI assistance and
+        shared as-is (MIT license). No support, no updates, no issues or pull
+        requests accepted. If you want to change or extend it, please fork it and
+        make it your own – use at your own risk.</li>
+    </ul>
+  </details>
+
+  <script src="options.js"></script>
+</body>
+</html>

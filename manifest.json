@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "OneNote Clipper (local)",
+  "short_name": "OneNote Clipper",
+  "version": "1.5.0",
+  "description": "Save emails to OneNote directly via the Microsoft Graph API – fully local, no third-party server. OAuth runs through your own Azure app registration.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "onenote-clipper-lokal@example.invalid",
+      "strict_min_version": "128.0"
+    }
+  },
+  "permissions": [
+    "messagesRead",
+    "storage",
+    "identity",
+    "tabs",
+    "webRequest",
+    "webRequestBlocking",
+    "declarativeNetRequestWithHostAccess"
+  ],
+  "host_permissions": [
+    "https://login.microsoftonline.com/*",
+    "https://graph.microsoft.com/*"
+  ],
+  "background": {
+    "scripts": ["mime.js", "background.js"]
+  },
+  "message_display_action": {
+    "default_title": "Save to OneNote",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
+  },
+  "options_ui": {
+    "page": "options.html",
+    "browser_style": false
+  },
+  "icons": {
+    "32": "icons/icon-32.png",
+    "64": "icons/icon-64.png"
+  }
+}

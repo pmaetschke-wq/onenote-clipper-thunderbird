@@ -1,0 +1,105 @@
+body {
+  font-family: system-ui, "Segoe UI", sans-serif;
+  font-size: 13px;
+  width: 340px;
+  margin: 0;
+  padding: 12px 14px 14px;
+  color: #1b1b1b;
+}
+
+h1 {
+  font-size: 15px;
+  margin: 0 0 10px;
+  color: #7719aa; /* OneNote-Lila */
+}
+
+label {
+  display: block;
+  margin: 10px 0 4px;
+  font-weight: 600;
+}
+
+label.row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 400;
+}
+
+select {
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+input[type="search"] {
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+  margin-bottom: 4px;
+  border: 1px solid #b8b8b8;
+  border-radius: 4px;
+  font: inherit;
+}
+
+#message-info {
+  margin: 4px 0 2px;
+  padding: 7px;
+  border-radius: 4px;
+}
+
+#message-info.msg { background: #f3f0f7; }
+#message-info.warn { background: #fde7e9; color: #a4262c; }
+
+#section-count { margin-top: 3px; }
+
+button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 4px;
+  background: #7719aa;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #b393cf;
+  cursor: wait;
+}
+
+.muted { color: #555; }
+.small { font-size: 12px; }
+.hidden { display: none; }
+
+.row.small {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.row.small a { color: #7719aa; }
+
+#status {
+  margin-top: 12px;
+  padding: 8px;
+  border-radius: 4px;
+  background: #fde7e9;
+  color: #a4262c;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+#result {
+  margin-top: 12px;
+  padding: 8px;
+  border-radius: 4px;
+  background: #e7f4e7;
+  color: #1e6b1e;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+#result a { color: #1e6b1e; font-weight: 600; }

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>OneNote Clipper – Alternative sign-in</title>
+<style>
+  body {
+    font-family: system-ui, "Segoe UI", sans-serif;
+    font-size: 14px;
+    max-width: 680px;
+    margin: 24px auto;
+    padding: 0 16px;
+    color: #1b1b1b;
+    line-height: 1.5;
+  }
+  h1 { font-size: 20px; color: #7719aa; }
+  button {
+    padding: 8px 16px; border: 0; border-radius: 4px;
+    background: #7719aa; color: #fff; font-weight: 600; cursor: pointer;
+  }
+  textarea {
+    width: 100%; box-sizing: border-box; margin: 8px 0;
+    font-family: ui-monospace, Consolas, monospace; font-size: 12px;
+  }
+  .mono {
+    font-family: ui-monospace, Consolas, monospace;
+    background: #f3f0f7; padding: 4px 6px; border-radius: 4px;
+    word-break: break-all; user-select: all;
+  }
+  .hint { color: #555; font-size: 13px; }
+  li { margin-bottom: 14px; }
+  #msg { margin-top: 18px; padding: 10px; border-radius: 4px; white-space: pre-wrap; word-break: break-word; }
+  #msg.ok { background: #e7f4e7; color: #1e6b1e; }
+  #msg.error { background: #fde7e9; color: #a4262c; }
+</style>
+</head>
+<body>
+  <h1>Alternative Microsoft sign-in</h1>
+  <p class="hint">Use this page if the sign-in window closes instantly or signing in
+  via the popup does not work. Here too: sign-in happens directly with Microsoft –
+  no third-party server is involved.</p>
+
+  <ol>
+    <li>
+      <button id="open-auth" type="button">Open sign-in page in a new tab</button>
+    </li>
+    <li>
+      Sign in with Microsoft in the new tab and grant the permission.<br />
+      You will then land on an <b>error page</b> ("page cannot be displayed" or similar) –
+      <b>this is normal and expected</b>. Only the address in the address bar matters:
+      it starts with<br />
+      <span class="mono" id="redirect-prefix">…</span>
+    </li>
+    <li>
+      Copy the <b>complete address</b> from the address bar (even though the page
+      shows an error) and paste it here:
+      <textarea id="pasted" rows="4" placeholder="https://…extensions.allizom.org/?code=…&state=…" spellcheck="false"></textarea>
+      <button id="complete" type="button">Complete sign-in</button>
+    </li>
+  </ol>
+
+  <div id="msg" class="hidden"></div>
+
+  <script src="auth.js"></script>
+</body>
+</html>
